@@ -34,7 +34,9 @@ function repartir() {
   jugadores = jugadores.map(j => {
     let cartas = [];
     for (let i = 0; i < 3; i++) {
-      cartas.push(mazo.pop());
+      if (mazo.length > 0) {
+        cartas.push(mazo.pop());
+      }
     }
     return { ...j, cartas };
   });
@@ -59,8 +61,10 @@ function render() {
   if (!orgSeleccionada) {
     app.innerHTML = `
       <h1>Juego de Organelas</h1>
-      <button onclick="repartir()">Repartir Cartas</button>
+      <button id="btnRepartir">Repartir Cartas</button>
     `;
+    // Agregar evento después de inyectar el HTML
+    document.getElementById("btnRepartir").addEventListener("click", repartir);
     return;
   }
 
@@ -69,7 +73,7 @@ function render() {
     <div>
       <h2>Pista actual:</h2>
       <p><em>${orgSeleccionada.caracteristicas[indiceCaracteristica]}</em></p>
-      <button onclick="siguientePista()">Siguiente pista</button>
+      <button id="btnSiguiente">Siguiente pista</button>
     </div>
     <hr>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:20px;">
@@ -83,6 +87,10 @@ function render() {
       `).join("")}
     </div>
   `;
+
+  // Agregar evento al botón de siguiente pista
+  document.getElementById("btnSiguiente").addEventListener("click", siguientePista);
 }
 
+// Render inicial
 render();
