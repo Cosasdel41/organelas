@@ -1,27 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Juego de Organelas</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Juego de Organelas — Local</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Juego de Organelas</h1>
+  <main class="container">
+    <h1>Juego de Organelas (local)</h1>
 
-  <div>
-    <button id="btnRepartir">Repartir Cartas</button>
-    <button id="btnCaracteristica">Dar Característica</button>
-    <button id="btnRobar">Robar Carta</button>
-  </div>
+    <section class="panel" id="setup">
+      <h2>Jugadores</h2>
+      <div class="row">
+        <input id="playerNameInput" placeholder="Nombre jugador" />
+        <button id="btnAddPlayer">Agregar jugador</button>
+        <button id="btnResetPlayers" class="danger">Reiniciar jugadores</button>
+      </div>
+      <div id="playersList" class="playersList"></div>
 
-  <div id="estado"></div>
+      <div style="margin-top:12px;">
+        <button id="btnStartGame" class="primary">Iniciar partida (reparte 3 cartas)</button>
+      </div>
+    </section>
 
-  <h2>Tu mano</h2>
-  <div id="mano"></div>
+    <section class="panel" id="teacher">
+      <h2>Control docente</h2>
+      <div class="row">
+        <button id="btnChooseSecret">Elegir carta secreta (del mazo)</button>
+        <button id="btnGiveClue">Dar siguiente pista</button>
+        <button id="btnRevealSecret" class="danger">(Mostrar secreto en consola — solo debug)</button>
+      </div>
+      <div id="clueBox" class="clueBox">Pista actual: <em>—</em></div>
+    </section>
 
-  <h2>Mesa</h2>
-  <div id="mesaCartas"></div>
+    <section class="panel" id="gameArea">
+      <div class="row between">
+        <div>
+          <strong>Mazo:</strong> <span id="deckCount">0</span>
+          <button id="btnDraw" class="small">Robar (roba y pasa turno)</button>
+        </div>
+        <div>
+          <strong>Descarte:</strong> <span id="discardCount">0</span>
+        </div>
+        <div>
+          <strong>Turno:</strong> <span id="currentPlayerName">—</span>
+        </div>
+      </div>
 
-  <script src="app.js"></script>
+      <div class="board">
+        <div class="column">
+          <h3>Tu mano (Jugador actual)</h3>
+          <div id="hand" class="hand"></div>
+        </div>
+
+        <div class="column">
+          <h3>Mesa (cartas jugadas)</h3>
+          <div id="table" class="table"></div>
+        </div>
+
+        <div class="column">
+          <h3>Puntuación</h3>
+          <div id="scores" class="scores"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="logPanel">
+      <h2>Estado / Mensajes</h2>
+      <div id="status" class="status">Partida no iniciada.</div>
+    </section>
+
+    <footer style="font-size:0.85rem; color:#555; margin-top:10px;">
+      Notas: el docente debe <strong>elegir la carta secreta</strong> desde el mazo y luego dar pistas. La carta secreta <em>no se muestra</em> en pantalla.
+    </footer>
+  </main>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
