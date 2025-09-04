@@ -1,30 +1,68 @@
+:root {
+  --bg: #f0f6fb;
+  --panel: #fff;
+  --primary: #0ea5e9;
+  --danger: #ef4444;
+  --muted: #6b7280;
+}
+
+* { box-sizing: border-box; }
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #f0f4f8;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: #0f172a;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+.container {
+  width: 100%;
+  max-width: 1100px;
 }
 
-button {
-  margin: 10px;
-  padding: 10px 20px;
-  cursor: pointer;
+h1 { margin: 0 0 12px 0; font-size: 1.6rem; }
+.panel {
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
 }
+.row { display:flex; gap:8px; align-items:center; }
+.row.between { display:flex; justify-content:space-between; align-items:center; }
+input { padding:8px; border-radius:8px; border:1px solid #e6edf3; min-width:160px; }
 
-#mano, #mesaCartas {
-  margin-top: 20px;
-}
+button { background: var(--primary); color: white; border: none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+button.small { padding:6px 10px; font-size:0.9rem; }
+button.danger { background: var(--danger); }
+button.primary { background: #0369a1; }
 
-.carta {
-  display: inline-block;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 5px;
-  background: #fff;
-  cursor: pointer;
-}
+.playersList { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; }
+.playerBadge { padding:6px 10px; background:#eef6fb; border-radius:8px; border:1px solid #d2eefc; }
 
-.carta.mesa {
-  background: #d4edda;
-  cursor: default;
+.board { display:flex; gap:12px; margin-top:12px; }
+.column { flex:1; min-width:200px; }
+.hand, .table, .scores { min-height:120px; padding:8px; background:#fbfeff; border-radius:8px; border:1px dashed #e6f3fb; }
+
+.card {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  padding:8px;
+  margin:6px 0;
+  border-radius:8px;
+  background:white;
+  border:1px solid #e6eef6;
 }
+.card .name { font-weight:600; }
+.card button { padding:6px 8px; font-size:0.85rem; border-radius:6px; }
+
+.card.playBtn { background:#d1fae5; border-color:#86efac; }
+.card.discardBtn { background:#fff7ed; border-color:#ffd8a8; }
+
+.clueBox { margin-top:8px; color:var(--muted); font-size:0.95rem; }
+.status { padding:8px; background:#f8fafc; border-radius:6px; border:1px solid #eef2f7; min-height:40px; }
+
+.scores .scoreRow { padding:6px 8px; border-radius:6px; margin:6px 0; background:#fff; border:1px solid #eef2f7; display:flex; justify-content:space-between; }
