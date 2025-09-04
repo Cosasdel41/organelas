@@ -4,14 +4,14 @@ body {
   background: #f0f4f8;
 }
 
-#mesa {
-  margin-top: 20px;
-}
-
 button {
   margin: 10px;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+#mano, #mesaCartas {
+  margin-top: 20px;
 }
 
 .carta {
@@ -21,4 +21,10 @@ button {
   padding: 10px;
   margin: 5px;
   background: #fff;
+  cursor: pointer;
+}
+
+.carta.mesa {
+  background: #d4edda;
+  cursor: default;
 }
