@@ -15,38 +15,68 @@ const organelas = [
 let mazo = [...organelas];
 let manoJugador = [];
 let caracteristicaActual = "";
+let descartadas = [];
 
 // === Funciones ===
 function repartirCartas() {
   manoJugador = [];
   mazo = [...organelas]; // reinicia mazo
+  descartadas = [];
   for (let i = 0; i < 3; i++) {
-    const carta = mazo.splice(Math.floor(Math.random() * mazo.length), 1)[0];
-    manoJugador.push(carta);
+    robarCarta();
   }
   mostrarMano();
   document.getElementById("estado").innerText = "Cartas repartidas.";
-  console.log("👉 Mano actual:", manoJugador);
+}
+
+function robarCarta() {
+  if (mazo.length === 0) return;
+  const carta = mazo.splice(Math.floor(Math.random() * mazo.length), 1)[0];
+  manoJugador.push(carta);
 }
 
 function darCaracteristica() {
-  if (mazo.length === 0) {
+  if (mazo.length === 0 && caracteristicaActual === "") {
     document.getElementById("estado").innerText = "No quedan organelas en el mazo.";
     return;
   }
   const organela = mazo[Math.floor(Math.random() * mazo.length)];
   caracteristicaActual = organela.caracteristicas[Math.floor(Math.random() * organela.caracteristicas.length)];
   document.getElementById("estado").innerText = `Característica: ${caracteristicaActual}`;
-  console.log("👉 Característica actual:", caracteristicaActual, "de", organela.nombre);
+  mostrarMano();
 }
 
+function descartarCarta(indice) {
+  if (!caracteristicaActual) {
+    alert("Primero el docente debe dar una característica.");
+    return;
+  }
+
+  const carta = manoJugador.splice(indice, 1)[0];
+  let mensaje = "";
+
+  // Chequeo de coincidencia
+  if (carta.caracteristicas.includes(caracteristicaActual)) {
+    mensaje = `✅ ¡Correcto! ${carta.nombre} coincide con la característica.`;
+  } else {
+    descartadas.push(carta);
+    mensaje = `❌ ${carta.nombre} no coincide. Robás otra carta.`;
+    robarCarta();
+  }
+
+  document.getElementById("estado").innerText = mensaje;
+  mostrarMano();
+}
+
+// === Renderizar la mano ===
 function mostrarMano() {
   const manoDiv = document.getElementById("mano");
   manoDiv.innerHTML = "";
-  manoJugador.forEach(carta => {
+  manoJugador.forEach((carta, i) => {
     const div = document.createElement("div");
     div.className = "carta";
     div.innerText = carta.nombre;
+    div.onclick = () => descartarCarta(i);
     manoDiv.appendChild(div);
   });
 }
