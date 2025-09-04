@@ -14,61 +14,59 @@ const organelas = [
 
 let mazo = [...organelas];
 let manoJugador = [];
+let mesa = [];
 let caracteristicaActual = "";
-let descartadas = [];
 
-// === Funciones ===
+// === Inicializar ===
 function repartirCartas() {
   manoJugador = [];
-  mazo = [...organelas]; // reinicia mazo
-  descartadas = [];
+  mazo = [...organelas];
+  mesa = [];
   for (let i = 0; i < 3; i++) {
     robarCarta();
   }
-  mostrarMano();
-  document.getElementById("estado").innerText = "Cartas repartidas.";
+  caracteristicaActual = "";
+  actualizarVista("Cartas repartidas. Esperando característica...");
 }
 
 function robarCarta() {
-  if (mazo.length === 0) return;
+  if (mazo.length === 0) {
+    actualizarVista("⚠️ No quedan cartas en el mazo.");
+    return;
+  }
   const carta = mazo.splice(Math.floor(Math.random() * mazo.length), 1)[0];
   manoJugador.push(carta);
+  actualizarVista("Robaste una carta. Pasás turno.");
 }
 
 function darCaracteristica() {
-  if (mazo.length === 0 && caracteristicaActual === "") {
-    document.getElementById("estado").innerText = "No quedan organelas en el mazo.";
+  if (mazo.length === 0) {
+    actualizarVista("⚠️ No quedan organelas en el mazo.");
     return;
   }
   const organela = mazo[Math.floor(Math.random() * mazo.length)];
   caracteristicaActual = organela.caracteristicas[Math.floor(Math.random() * organela.caracteristicas.length)];
-  document.getElementById("estado").innerText = `Característica: ${caracteristicaActual}`;
-  mostrarMano();
+  actualizarVista(`🔍 Característica: ${caracteristicaActual}`);
 }
 
-function descartarCarta(indice) {
+function jugarCarta(indice) {
   if (!caracteristicaActual) {
-    alert("Primero el docente debe dar una característica.");
+    alert("Primero debe darse una característica.");
     return;
   }
 
   const carta = manoJugador.splice(indice, 1)[0];
-  let mensaje = "";
+  mesa.push(carta);
 
-  // Chequeo de coincidencia
   if (carta.caracteristicas.includes(caracteristicaActual)) {
-    mensaje = `✅ ¡Correcto! ${carta.nombre} coincide con la característica.`;
+    actualizarVista(`✅ ¡Correcto! ${carta.nombre} coincide.`);
   } else {
-    descartadas.push(carta);
-    mensaje = `❌ ${carta.nombre} no coincide. Robás otra carta.`;
-    robarCarta();
+    actualizarVista(`❌ ${carta.nombre} no coincide. Pasás turno.`);
+    robarCarta(); // reponer carta fallida
   }
-
-  document.getElementById("estado").innerText = mensaje;
-  mostrarMano();
 }
 
-// === Renderizar la mano ===
+// === Renderizar ===
 function mostrarMano() {
   const manoDiv = document.getElementById("mano");
   manoDiv.innerHTML = "";
@@ -76,11 +74,29 @@ function mostrarMano() {
     const div = document.createElement("div");
     div.className = "carta";
     div.innerText = carta.nombre;
-    div.onclick = () => descartarCarta(i);
+    div.onclick = () => jugarCarta(i);
     manoDiv.appendChild(div);
   });
+}
+
+function mostrarMesa() {
+  const mesaDiv = document.getElementById("mesaCartas");
+  mesaDiv.innerHTML = "";
+  mesa.forEach(carta => {
+    const div = document.createElement("div");
+    div.className = "carta mesa";
+    div.innerText = carta.nombre;
+    mesaDiv.appendChild(div);
+  });
+}
+
+function actualizarVista(mensaje) {
+  document.getElementById("estado").innerText = mensaje;
+  mostrarMano();
+  mostrarMesa();
 }
 
 // === Event listeners ===
 document.getElementById("btnRepartir").addEventListener("click", repartirCartas);
 document.getElementById("btnCaracteristica").addEventListener("click", darCaracteristica);
+document.getElementById("btnRobar").addEventListener("click", robarCarta);
