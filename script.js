@@ -5,13 +5,16 @@
 // 2. En la sección "Your apps", selecciona la web app (</>).
 // 3. Copia el objeto `firebaseConfig`.
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    databaseURL: "YOUR_DATABASE_URL" // Important for Realtime Database
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAyi3xPHyGfJFvnbMbCYQhii2upkXKNR8A",
+  authDomain: "organelas-bdccb.firebaseapp.com",
+  databaseURL: "https://organelas-bdccb-default-rtdb.firebaseio.com",
+  projectId: "organelas-bdccb",
+  storageBucket: "organelas-bdccb.firebasestorage.app",
+  messagingSenderId: "290015044973",
+  appId: "1:290015044973:web:f12b9e3fc63e94e78e2664",
+  measurementId: "G-SWWFELJKLK"
 };
 
 // Inicializa Firebase
