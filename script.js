@@ -13,6 +13,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 const auth = firebase.auth();
+auth.signInAnonymously()
+  .then(userCredential => {
+    const myPlayerId = userCredential.user.uid;
+    console.log("Autenticado como:", myPlayerId);
+    alert("Autenticación correcta: " + myPlayerId.substring(0,6) + "...");
+  })
+  .catch(error => {
+    console.error("Error al autenticarse:", error);
+    alert("Error al autenticarse con Firebase. Revisa la consola.");
+  });
+
 
 // --- 2. Variables globales ---
 let myPlayerId = null;
