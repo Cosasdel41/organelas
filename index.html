@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego de Organelas - Firebase</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Incluye el SDK de Firebase antes de tu script.js -->
+
+    <!-- SDKs de Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -38,7 +39,6 @@
                 <div id="myCardsContainer" class="cards-container"></div>
                 <div class="player-actions">
                     <button id="drawCardBtn">Robar Carta</button>
-                    <!-- "Jugar carta" functionality will be tied to clicking a card in hand -->
                 </div>
             </div>
 
@@ -56,6 +56,7 @@
         </div>
     </div>
 
+    <!-- Tu script debe estar al final -->
     <script src="script.js"></script>
 </body>
 </html>
