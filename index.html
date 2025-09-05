@@ -1,61 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Organelas - Firebase</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Incluye el SDK de Firebase antes de tu script.js -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Organelas - Firebase</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase SDK (compat para usar API clásica) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <div id="landing-page">
-        <h1>Juego de Organelas</h1>
-        <div class="controls">
-            <button id="createRoomBtn">Crear Sala</button>
-            <input type="text" id="roomCodeInput" placeholder="Código de Sala">
-            <button id="joinRoomBtn">Unirse a Sala</button>
-        </div>
-        <p id="roomCodeDisplay"></p>
-        <p id="playerStatus"></p>
+  <!-- Landing Page -->
+  <div id="landing-page">
+    <h1>Juego de Organelas</h1>
+    <div class="controls">
+      <button id="createRoomBtn">Crear Sala</button>
+      <input type="text" id="roomCodeInput" placeholder="Código de Sala">
+      <button id="joinRoomBtn">Unirse a Sala</button>
+    </div>
+    <p id="roomCodeDisplay"></p>
+    <p id="playerStatus"></p>
+  </div>
+
+  <!-- Game Page -->
+  <div id="game-page" style="display:none;">
+    <h2>Sala <span id="currentRoomCode"></span></h2>
+    <h3 id="currentPlayerTurn">Turno de: </h3>
+
+    <div id="teacher-section">
+      <h4>Control del Docente (Host)</h4>
+      <input type="text" id="targetOrganelleInput" placeholder="Organela objetivo">
+      <button id="setTargetBtn">Establecer Objetivo</button>
     </div>
 
-    <div id="game-page" style="display: none;">
-        <h2>Sala <span id="currentRoomCode"></span></h2>
-        <h3 id="currentPlayerTurn">Turno de: </h3>
-
-        <div id="teacher-section">
-            <h4>Control del Docente (Host)</h4>
-            <input type="text" id="targetOrganelleInput" placeholder="Organela objetivo (ej: Mitocondria)">
-            <button id="setTargetBtn">Establecer Objetivo</button>
+    <div class="game-area">
+      <div class="player-hand" id="myHand">
+        <h3>Mis Cartas (<span id="myPlayerId"></span>)</h3>
+        <div id="myCardsContainer" class="cards-container"></div>
+        <div class="player-actions">
+          <button id="drawCardBtn">Robar Carta</button>
         </div>
+      </div>
 
-        <div class="game-area">
-            <div class="player-hand" id="myHand">
-                <h3>Mis Cartas (<span id="myPlayerId"></span>)</h3>
-                <div id="myCardsContainer" class="cards-container"></div>
-                <div class="player-actions">
-                    <button id="drawCardBtn">Robar Carta</button>
-                    <!-- "Jugar carta" functionality will be tied to clicking a card in hand -->
-                </div>
-            </div>
+      <div class="table">
+        <h3>Mesa</h3>
+        <div id="tableContainer" class="cards-container"></div>
+      </div>
 
-            <div class="table">
-                <h3>Mesa</h3>
-                <div id="tableContainer" class="cards-container"></div>
-            </div>
-
-            <div class="other-players-hand">
-                <h3>Cartas de Otros Jugadores</h3>
-                <div id="otherPlayersContainer" class="cards-container">
-                    <p>Esperando otros jugadores...</p>
-                </div>
-            </div>
+      <div class="other-players-hand">
+        <h3>Cartas de Otros Jugadores</h3>
+        <div id="otherPlayersContainer" class="cards-container">
+          <p>Esperando otros jugadores...</p>
         </div>
+      </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
