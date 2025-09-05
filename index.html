@@ -3,61 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juego de Organelas - Firebase</title>
+  <title>Juego de Organelas</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Firebase SDK (compat para usar API clásica) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <!-- Firebase -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
 </head>
 <body>
-  <!-- Landing Page -->
-  <div id="landing-page">
+  <div id="pantalla-inicio">
     <h1>Juego de Organelas</h1>
-    <div class="controls">
-      <button id="createRoomBtn">Crear Sala</button>
-      <input type="text" id="roomCodeInput" placeholder="Código de Sala">
-      <button id="joinRoomBtn">Unirse a Sala</button>
-    </div>
-    <p id="roomCodeDisplay"></p>
-    <p id="playerStatus"></p>
+    <button id="crear-sala">Crear Sala</button>
+    <input type="text" id="codigo-sala-input" placeholder="Código de sala">
+    <button id="unirse-sala">Unirse a Sala</button>
   </div>
 
-  <!-- Game Page -->
-  <div id="game-page" style="display:none;">
-    <h2>Sala <span id="currentRoomCode"></span></h2>
-    <h3 id="currentPlayerTurn">Turno de: </h3>
-
-    <div id="teacher-section">
-      <h4>Control del Docente (Host)</h4>
-      <input type="text" id="targetOrganelleInput" placeholder="Organela objetivo">
-      <button id="setTargetBtn">Establecer Objetivo</button>
+  <div id="pantalla-juego" style="display:none;">
+    <h2 id="titulo-sala"></h2>
+    <p>Turno: <span id="turno-actual"></span></p>
+    <div id="mesa">
+      <h3>Mesa</h3>
+      <div id="cartas-mesa"></div>
     </div>
-
-    <div class="game-area">
-      <div class="player-hand" id="myHand">
-        <h3>Mis Cartas (<span id="myPlayerId"></span>)</h3>
-        <div id="myCardsContainer" class="cards-container"></div>
-        <div class="player-actions">
-          <button id="drawCardBtn">Robar Carta</button>
-        </div>
-      </div>
-
-      <div class="table">
-        <h3>Mesa</h3>
-        <div id="tableContainer" class="cards-container"></div>
-      </div>
-
-      <div class="other-players-hand">
-        <h3>Cartas de Otros Jugadores</h3>
-        <div id="otherPlayersContainer" class="cards-container">
-          <p>Esperando otros jugadores...</p>
-        </div>
-      </div>
+    <div id="mano">
+      <h3>Tu mano</h3>
+      <div id="cartas-jugador"></div>
     </div>
+    <button id="robar-carta">Robar carta</button>
   </div>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
