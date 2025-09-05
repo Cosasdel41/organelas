@@ -1,81 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Juego de Organelas — Local</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Organelas - Firebase</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Incluye el SDK de Firebase antes de tu script.js -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <main class="container">
-    <h1>Juego de Organelas (local)</h1>
-
-    <section class="panel" id="setup">
-      <h2>Jugadores</h2>
-      <div class="row">
-        <input id="playerNameInput" placeholder="Nombre jugador" />
-        <button id="btnAddPlayer">Agregar jugador</button>
-        <button id="btnResetPlayers" class="danger">Reiniciar jugadores</button>
-      </div>
-      <div id="playersList" class="playersList"></div>
-
-      <div style="margin-top:12px;">
-        <button id="btnStartGame" class="primary">Iniciar partida (reparte 3 cartas)</button>
-      </div>
-    </section>
-
-    <section class="panel" id="teacher">
-      <h2>Control docente</h2>
-      <div class="row">
-        <button id="btnChooseSecret">Elegir carta secreta (del mazo)</button>
-        <button id="btnGiveClue">Dar siguiente pista</button>
-        <button id="btnRevealSecret" class="danger">(Mostrar secreto en consola — solo debug)</button>
-      </div>
-      <div id="clueBox" class="clueBox">Pista actual: <em>—</em></div>
-    </section>
-
-    <section class="panel" id="gameArea">
-      <div class="row between">
-        <div>
-          <strong>Mazo:</strong> <span id="deckCount">0</span>
-          <button id="btnDraw" class="small">Robar (roba y pasa turno)</button>
+    <div id="landing-page">
+        <h1>Juego de Organelas</h1>
+        <div class="controls">
+            <button id="createRoomBtn">Crear Sala</button>
+            <input type="text" id="roomCodeInput" placeholder="Código de Sala">
+            <button id="joinRoomBtn">Unirse a Sala</button>
         </div>
-        <div>
-          <strong>Descarte:</strong> <span id="discardCount">0</span>
-        </div>
-        <div>
-          <strong>Turno:</strong> <span id="currentPlayerName">—</span>
-        </div>
-      </div>
+        <p id="roomCodeDisplay"></p>
+        <p id="playerStatus"></p>
+    </div>
 
-      <div class="board">
-        <div class="column">
-          <h3>Tu mano (Jugador actual)</h3>
-          <div id="hand" class="hand"></div>
+    <div id="game-page" style="display: none;">
+        <h2>Sala <span id="currentRoomCode"></span></h2>
+        <h3 id="currentPlayerTurn">Turno de: </h3>
+
+        <div id="teacher-section">
+            <h4>Control del Docente (Host)</h4>
+            <input type="text" id="targetOrganelleInput" placeholder="Organela objetivo (ej: Mitocondria)">
+            <button id="setTargetBtn">Establecer Objetivo</button>
         </div>
 
-        <div class="column">
-          <h3>Mesa (cartas jugadas)</h3>
-          <div id="table" class="table"></div>
+        <div class="game-area">
+            <div class="player-hand" id="myHand">
+                <h3>Mis Cartas (<span id="myPlayerId"></span>)</h3>
+                <div id="myCardsContainer" class="cards-container"></div>
+                <div class="player-actions">
+                    <button id="drawCardBtn">Robar Carta</button>
+                    <!-- "Jugar carta" functionality will be tied to clicking a card in hand -->
+                </div>
+            </div>
+
+            <div class="table">
+                <h3>Mesa</h3>
+                <div id="tableContainer" class="cards-container"></div>
+            </div>
+
+            <div class="other-players-hand">
+                <h3>Cartas de Otros Jugadores</h3>
+                <div id="otherPlayersContainer" class="cards-container">
+                    <p>Esperando otros jugadores...</p>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="column">
-          <h3>Puntuación</h3>
-          <div id="scores" class="scores"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" id="logPanel">
-      <h2>Estado / Mensajes</h2>
-      <div id="status" class="status">Partida no iniciada.</div>
-    </section>
-
-    <footer style="font-size:0.85rem; color:#555; margin-top:10px;">
-      Notas: el docente debe <strong>elegir la carta secreta</strong> desde el mazo y luego dar pistas. La carta secreta <em>no se muestra</em> en pantalla.
-    </footer>
-  </main>
-
-  <script src="app.js" defer></script>
+    <script src="script.js"></script>
 </body>
 </html>
