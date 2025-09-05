@@ -10,33 +10,23 @@ const firebaseConfig = {
   measurementId: "G-SWWFELJKLK"
 };
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 const auth = firebase.auth();
 
-// Variables globales
-let currentRoomRef, myPlayerId, myRoomCode, isHost = false;
+// --- 2. Variables globales ---
+let myPlayerId = null;
+let myRoomCode = null;
+let currentRoomRef = null;
 
-// --- Elementos DOM ---
+// --- 3. Elementos DOM ---
 const createRoomBtn = document.getElementById('createRoomBtn');
 const joinRoomBtn = document.getElementById('joinRoomBtn');
 const roomCodeInput = document.getElementById('roomCodeInput');
 const roomCodeDisplay = document.getElementById('roomCodeDisplay');
 const playerStatusDisplay = document.getElementById('playerStatus');
-const landingPage = document.getElementById('landing-page');
-const gamePage = document.getElementById('game-page');
-const myPlayerIdDisplay = document.getElementById('myPlayerId');
-const currentRoomCodeDisplay = document.getElementById('currentRoomCode');
-const teacherSection = document.getElementById('teacher-section');
-const targetOrganelleInput = document.getElementById('targetOrganelleInput');
-const setTargetBtn = document.getElementById('setTargetBtn');
-const myCardsContainer = document.getElementById('myCardsContainer');
-const tableContainer = document.getElementById('tableContainer');
-const otherPlayersContainer = document.getElementById('otherPlayersContainer');
-const drawCardBtn = document.getElementById('drawCardBtn');
 
-// --- Utils ---
+// --- 4. Funciones de utilidad ---
 function generateRoomCode() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let code = '';
@@ -44,69 +34,83 @@ function generateRoomCode() {
   return code;
 }
 
-function shuffleArray(arr) {
-  for(let i=arr.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]] = [arr[j],arr[i]];
-  }
-  return arr;
-}
-
-// Autenticación anónima
-async function signInAnonymously(){
-  try{
-    const userCredential = await auth.signInAnonymously();
+// --- 5. Autenticación anónima al cargar ---
+auth.signInAnonymously()
+  .then(userCredential => {
     myPlayerId = userCredential.user.uid;
-    myPlayerIdDisplay.textContent = myPlayerId.substring(0,6)+'...';
     console.log("Autenticado como:", myPlayerId);
-  } catch(e){ console.error(e); }
-}
+  })
+  .catch(error => {
+    console.error("Error autenticación anónima:", error);
+    alert("No se pudo autenticar con Firebase");
+  });
 
-// --- Función Crear Sala ---
-async function createRoom(){
-  await signInAnonymously();
+// --- 6. Crear Sala ---
+async function createRoom() {
+  if (!myPlayerId) {
+    alert("Esperando autenticación de Firebase... recarga si tarda demasiado.");
+    return;
+  }
+
   myRoomCode = generateRoomCode();
-  currentRoomRef = database.ref('salas/'+myRoomCode);
+  currentRoomRef = database.ref('salas/' + myRoomCode);
 
   currentRoomRef.once('value', async snapshot => {
-    if(snapshot.exists()){
+    if (snapshot.exists()) {
       console.warn("Código repetido, generando otro...");
       createRoom();
       return;
     }
+
     await currentRoomRef.set({
-      jugadores: {[myPlayerId]: {nombre: "Docente", cartas: []}},
-      mazo: shuffleArray(["Núcleo","Mitocondria","Ribosomas","Lisosomas"]),
+      jugadores: { [myPlayerId]: { nombre: "Docente", cartas: [] } },
+      mazo: ["Núcleo","Mitocondria","Ribosomas","Lisosomas"],
       mesa: [],
       turno: null,
-      estado: 'esperando_jugadores',
+      estado: "esperando_jugadores",
       host: myPlayerId,
       targetOrganelle: null
     });
-    isHost = true;
-    roomCodeDisplay.textContent = "Sala creada: "+myRoomCode;
-    playerStatusDisplay.textContent = "Esperando jugadores...";
-    joinRoom(myRoomCode);
+
+    roomCodeDisplay.textContent = "Sala creada: " + myRoomCode;
+    playerStatusDisplay.textContent = "Esperando que otro jugador se una...";
+    console.log("Sala creada:", myRoomCode);
   });
 }
 
-// --- Función Unirse a Sala ---
-async function joinRoom(code){
-  await signInAnonymously();
-  myRoomCode = code || roomCodeInput.value.toUpperCase();
-  if(!myRoomCode){ alert("Introduce código"); return; }
-  currentRoomRef = database.ref('salas/'+myRoomCode);
+// --- 7. Unirse a Sala ---
+async function joinRoom() {
+  if (!myPlayerId) {
+    alert("Esperando autenticación...");
+    return;
+  }
 
-  currentRoomRef.once('value', snapshot=>{
-    if(!snapshot.exists()){ alert("Sala no existe"); return; }
-    landingPage.style.display='none';
-    gamePage.style.display='block';
-    currentRoomCodeDisplay.textContent=myRoomCode;
-    console.log("Unido a sala:",myRoomCode);
+  const code = roomCodeInput.value.toUpperCase();
+  if (!code) {
+    alert("Ingresa un código de sala.");
+    return;
+  }
+
+  currentRoomRef = database.ref('salas/' + code);
+  currentRoomRef.once('value', async snapshot => {
+    if (!snapshot.exists()) {
+      alert("La sala no existe. Verifica el código.");
+      return;
+    }
+
+    const sala = snapshot.val();
+    if (!sala.jugadores[myPlayerId]) {
+      // Agregar jugador
+      await currentRoomRef.child('jugadores/' + myPlayerId).set({ nombre: "Jugador", cartas: [] });
+    }
+
+    myRoomCode = code;
+    roomCodeDisplay.textContent = "Sala unida: " + myRoomCode;
+    playerStatusDisplay.textContent = "Esperando al host o jugando...";
+    console.log("Unido a sala:", myRoomCode);
   });
 }
 
-// --- Event Listeners ---
-createRoomBtn.addEventListener('click',createRoom);
-joinRoomBtn.addEventListener('click',()=>joinRoom());
-signInAnonymously();
+// --- 8. Botones ---
+createRoomBtn.addEventListener('click', createRoom);
+joinRoomBtn.addEventListener('click', joinRoom);
